@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import sql.Util;
+import sql.impl.GuildConfig;
 import sql.impl.Streamer;
 
 /*
@@ -20,7 +21,7 @@ public class AddStreamer extends ListenerAdapter {
     @SneakyThrows
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        if (!Util.guildIsConfigured(event.getGuild().getId())) {
+        if (!GuildConfig.guildIsConfigured(event.getGuild().getId())) {
             Embeds.error(event, "Your guild has not yet been configured, please use " + Bot.config.getProperty("PREFIX") + "config to begin.");
             return;
         }

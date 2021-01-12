@@ -37,7 +37,7 @@ public class Config extends ListenerAdapter {
         GuildChannel announcementChannel  = event.getMessage().getMentionedChannels().get(0);
 
         //If an entry already exists, update it.
-        if (Util.guildIsConfigured(event.getGuild().getId())) {
+        if (GuildConfig.guildIsConfigured(event.getGuild().getId())) {
             GuildConfig.updateGuild(event.getGuild().getId(), announcementChannel.getId());
             Embeds.success(event, "Successfully updated " + announcementChannel.getName() + " as the announcement channel!");
             return;
