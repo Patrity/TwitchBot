@@ -3,13 +3,13 @@ package bot.command.impl;
 import bot.Bot;
 import bot.util.Embeds;
 import http.request.GetUser;
+import http.request.NewSubscription;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import sql.Util;
 import sql.impl.GuildConfig;
-import sql.impl.Streamer;
+import sql.impl.StreamerUtils;
 
 /*
  * @project TwitchBot
@@ -59,7 +59,8 @@ public class AddStreamer extends ListenerAdapter {
             return;
         }
 
-        Streamer.addStreamer(target.getId(), twitchId, event.getGuild().getId());
+        NewSubscription.sub(twitchId);
+        StreamerUtils.addStreamer(target.getId(), twitchId, event.getGuild().getId());
         Embeds.success(event, target.getAsMention() + " Is now added a streamer with the username: " + twitchUsername);
     }
 }

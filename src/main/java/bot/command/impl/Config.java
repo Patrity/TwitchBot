@@ -6,7 +6,6 @@ import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import sql.Util;
 import sql.impl.GuildConfig;
 
 /*

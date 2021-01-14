@@ -6,9 +6,8 @@ import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import sql.Util;
 import sql.impl.GuildConfig;
-import sql.impl.Streamer;
+import sql.impl.StreamerUtils;
 
 /*
  * @project TwitchBot
@@ -43,12 +42,12 @@ public class RemoveStreamer extends ListenerAdapter {
         }
 
         //Checks if the user is watched yet
-        if(!Streamer.isStreamer(target.getId(), event.getGuild().getId())) {
+        if(!StreamerUtils.isStreamer(target.getId(), event.getGuild().getId())) {
             Embeds.error(event, "This user has not been configured as a streamer, please use `" + Bot.config.getProperty("PREFIX") + "addstreamer @user twitch_user_name`");
             return;
         }
 
-        Streamer.removeStreamer(target.getId());
+        StreamerUtils.removeStreamer(target.getId());
         Embeds.success(event, "You will no longer receive announcements if "+target.getAsMention() + " goes live.");
 
     }
