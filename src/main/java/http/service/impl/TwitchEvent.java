@@ -5,9 +5,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.javalin.http.Context;
 import model.Streamer;
-import model.Subscribe;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
+import sql.impl.GuildConfig;
 import sql.impl.StreamerUtils;
 
+import java.awt.*;
 import java.util.List;
 
 /*
@@ -23,21 +27,37 @@ public class TwitchEvent {
         JsonParser parser = new JsonParser();
         JsonObject jsonRequest = (JsonObject) parser.parse(request.body());
 
+        System.out.println(jsonRequest.toString());
+
         //grab event object from request
         JsonObject event = jsonRequest.getAsJsonObject("event");
 
         //get twitch ID of the streamer
-        String streamerId = event.getAsJsonPrimitive("broadcaster_user_id").toString();
+        String streamerId = event.getAsJsonPrimitive("broadcaster_user_id").getAsString();
+
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setColor(Color.GREEN);
+
 
         List<Streamer> streamers = StreamerUtils.getStreamerByTwitchId(streamerId);
         streamers.stream().forEach( streamer -> {
 
-                    //TODO: Send Messages, Change roles
 
-                    String guildId = streamer.getGuildId();
-                    String discordId = streamer.getDiscordId();
+            try {
+                String guildId = streamer.getGuildId();
+                String discordId = streamer.getDiscordId();
+                String channelId = GuildConfig.getGuild(guildId).getChannelId();
 
-            //Subscribe test = new Subscribe();
+                Bot.SINGLETON.jda.getGuildById(guildId).retrieveMemberById(discordId).queue(member -> {
+                    eb.setTitle(member.getEffectiveName() + " is Now Live!");
+                    eb.setDescription(member.getAsMention() + " has just gone live! Check out the stream! https://twitch.tv/" + streamer.getTwitchUsername());
+                    eb.setThumbnail(member.getUser().getAvatarUrl());
+                    Bot.SINGLETON.jda.getGuildById(guildId).getTextChannelById(channelId).sendMessage(eb.build()).queue();
+                        });
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
                 });
     }
 }
