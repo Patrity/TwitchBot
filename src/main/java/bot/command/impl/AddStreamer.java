@@ -55,12 +55,12 @@ public class AddStreamer extends ListenerAdapter {
         //Confirms that the supplied twitch username exists
         String twitchId = GetUser.byLogin(twitchUsername);
         if (twitchId.isEmpty()) {
-            Embeds.error(event, "Twitch username: `" + command[2] + "` not found!");
+            Embeds.error(event, "Twitch username: `" + twitchUsername + "` not found!");
             return;
         }
 
         NewSubscription.sub(twitchId);
-        StreamerUtils.addStreamer(target.getId(), twitchId, event.getGuild().getId());
+        StreamerUtils.addStreamer(target.getId(), twitchId, twitchUsername, event.getGuild().getId());
         Embeds.success(event, target.getAsMention() + " Is now added a streamer with the username: " + twitchUsername);
     }
 }

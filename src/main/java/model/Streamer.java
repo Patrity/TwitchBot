@@ -1,5 +1,6 @@
 package model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /*
@@ -7,13 +8,12 @@ import lombok.Getter;
  * @author Patrity - https://github.com/Patrity
  * Created on - 1/11/2021
  */
+
+@AllArgsConstructor
 public class Streamer {
 
-    public Streamer(String discordId, String twitchId, String guildId) {
-
-    }
-
     @Getter
-    public String discordId, twitchId, guildId;
+
+    public String discordId, twitchId, twitchUsername, guildId;
 
 }

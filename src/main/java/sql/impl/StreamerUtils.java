@@ -24,7 +24,7 @@ public class StreamerUtils {
             con.setAutoCommit(false);
             PreparedStatement st = con.prepareStatement("SELECT * FROM streamers WHERE discord_id = ? AND guild_id = ?");
             st.setString(1, discordId);
-            st.setString(1, guildId);
+            st.setString(2, guildId);
             ResultSet rs = st.executeQuery();
             con.commit();
             while (rs.next()) {
@@ -34,17 +34,19 @@ public class StreamerUtils {
         }
     }
 
-    public static void addStreamer(String discordId, String twitchId, String guildId) throws SQLException {
+    public static void addStreamer(String discordId, String twitchId, String twitchUsername, String guildId) throws SQLException {
         if (isStreamer(discordId, guildId)) {
             modfifyStreamer(discordId, twitchId, guildId);
+            return;
         } else {
             try (Connection con = Bot.db.get()) {
                 con.setAutoCommit(false);
-                PreparedStatement st = con.prepareStatement("INSERT INTO streamers (discord_id, twitch_id, guild_id, enabled) VALUES (?, ?, ?, ?)");
+                PreparedStatement st = con.prepareStatement("INSERT INTO streamers (discord_id, twitch_id, twitch_name, guild_id, enabled) VALUES (?, ?, ?, ?, ?)");
                 st.setString(1, discordId);
                 st.setString(2, twitchId);
-                st.setString(3, guildId);
-                st.setInt(4, 1);
+                st.setString(3, twitchUsername);
+                st.setString(4, guildId);
+                st.setInt(5, 1);
                 st.execute();
                 con.commit();
             }
@@ -77,16 +79,15 @@ public class StreamerUtils {
         List<Streamer> streamers = new ArrayList<>();
         try (Connection con = Bot.db.get()) {
             con.setAutoCommit(false);
-            PreparedStatement st = con.prepareStatement("SELECT discord_id, guild_id FROM streamers WHERE twitch_id = ? AND enabled = 1");
+            PreparedStatement st = con.prepareStatement("SELECT discord_id, guild_id, twitch_name FROM streamers WHERE twitch_id = ? AND enabled = 1");
             st.setString(1, twitchId);
             ResultSet rs = st.executeQuery();
             con.commit();
             while (rs.next()) {
-                streamers.add(new Streamer(rs.getString("discord_id"), twitchId, rs.getString("guild_id")));
+                streamers.add(new Streamer(rs.getString("discord_id"), twitchId, rs.getString("twitch_name"), rs.getString("guild_id")));
             }
         }
         return streamers;
     }
-
 
 }
