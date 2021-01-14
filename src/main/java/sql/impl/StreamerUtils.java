@@ -2,18 +2,21 @@ package sql.impl;
 
 import bot.Bot;
 import lombok.SneakyThrows;
+import model.Streamer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * @project TwitchBot
  * @author Patrity - https://github.com/Patrity
  * Created on - 1/9/2021
  */
-public class Streamer {
+public class StreamerUtils {
 
     @SneakyThrows
     public static boolean isStreamer(String discordId, String guildId) {
@@ -68,4 +71,22 @@ public class Streamer {
             con.commit();
         }
     }
+
+    @SneakyThrows
+    public static List<Streamer> getStreamerByTwitchId(String twitchId) {
+        List<Streamer> streamers = new ArrayList<>();
+        try (Connection con = Bot.db.get()) {
+            con.setAutoCommit(false);
+            PreparedStatement st = con.prepareStatement("SELECT discord_id, guild_id FROM streamers WHERE twitch_id = ? AND enabled = 1");
+            st.setString(1, twitchId);
+            ResultSet rs = st.executeQuery();
+            con.commit();
+            while (rs.next()) {
+                streamers.add(new Streamer(rs.getString("discord_id"), twitchId, rs.getString("guild_id")));
+            }
+        }
+        return streamers;
+    }
+
+
 }
