@@ -38,6 +38,9 @@ public class NewSubscription {
                 .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(sub)))
                 .build();
 
+        System.err.println("Request sent:");
+        System.out.println(gson.toJson(sub));
+
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 }

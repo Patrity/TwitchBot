@@ -1,8 +1,6 @@
 package http.service;
 
 import bot.Bot;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import http.service.impl.ChallengeConfirmation;
 import http.service.impl.TwitchEvent;
 
@@ -19,8 +17,9 @@ public class Api {
 
         Bot.SINGLETON.api.post(path, request -> {
 
-            try {
+            System.err.println("Request Received:");
 
+            try {
                 //Receives all requests with a challenge in order to confirm a new subscription
                 ChallengeConfirmation.confirm(request);
 
