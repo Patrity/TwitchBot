@@ -17,11 +17,14 @@ public class ChallengeConfirmation {
         JsonParser parser = new JsonParser();
         JsonObject jsonRequest = (JsonObject) parser.parse(request.body());
 
+        System.out.println(jsonRequest.toString());
+
         //extract the challenge string
-        String challenge = jsonRequest.getAsJsonPrimitive("challenge").toString();
+        String challenge = jsonRequest.get("challenge").getAsString();
 
         //return the challenge string to verify url ownership
         request.result(challenge);
+        System.out.println(challenge);
 
     }
 }
