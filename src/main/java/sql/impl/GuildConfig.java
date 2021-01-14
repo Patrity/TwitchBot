@@ -1,6 +1,8 @@
 package sql.impl;
 
 import bot.Bot;
+import lombok.SneakyThrows;
+import model.Guild;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -49,5 +51,20 @@ public class GuildConfig {
             }
             return false;
         }
+    }
+
+    @SneakyThrows
+    public static Guild getGuild(String guildId) {
+        try (Connection con = Bot.db.get()) {
+            con.setAutoCommit(false);
+            PreparedStatement st = con.prepareStatement("SELECT * FROM guilds WHERE guild_id = ?");
+            st.setString(1, guildId);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                return new Guild(guildId, rs.getString("channel_id"));
+            }
+
+        }
+        return null;
     }
 }

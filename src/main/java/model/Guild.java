@@ -5,9 +5,16 @@ package model;
  * @author Patrity - https://github.com/Patrity
  * Created on - 1/11/2021
  */
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@AllArgsConstructor
 public class Guild {
 
-    public Guild (String guildId, String channelId){
+    @Setter
+    @Getter
+    public String guildId, channelId;
 
-    }
 }
