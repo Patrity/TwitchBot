@@ -4,6 +4,7 @@ import bot.Bot;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import http.service.impl.ChallengeConfirmation;
+import http.service.impl.TwitchEvent;
 
 /*
  * @project TwitchBot
@@ -12,15 +13,21 @@ import http.service.impl.ChallengeConfirmation;
  */
 public class Api {
 
+    public static String path = "/callback";
+
     public static void callback() {
-        Bot.SINGLETON.api.post("/callback", request -> {
+
+        Bot.SINGLETON.api.post(path, request -> {
+
             try {
 
+                //Receives all requests with a challenge in order to confirm a new subscription
                 ChallengeConfirmation.confirm(request);
 
             } catch (Exception ignored) {
 
-                //TODO: Discord stuff from here, handle role switches and announcements
+                //All other requests routed to method which handles live notifications
+                TwitchEvent.live(request);
 
             }
         });
