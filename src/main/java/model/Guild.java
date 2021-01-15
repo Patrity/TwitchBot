@@ -15,6 +15,6 @@ public class Guild {
 
     @Setter
     @Getter
-    public String guildId, channelId;
+    public String guildId, channelId, streamerRoleId;
 
 }

@@ -4,6 +4,7 @@ import bot.Bot;
 import bot.util.Embeds;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.GuildChannel;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import sql.impl.GuildConfig;
@@ -22,8 +23,8 @@ public class Config extends ListenerAdapter {
         String[] command = event.getMessage().getContentRaw().split(" ");
 
         //Verify the command is input correctly
-        if (command.length != 2) {
-            Embeds.error(event, "Correct Syntax: `" + Bot.config.getProperty("PREFIX") + "config #announcement_channel`");
+        if (command.length != 3) {
+            Embeds.error(event, "Correct Syntax: `" + Bot.config.getProperty("PREFIX") + "config #announcement_channel @streamer_role`");
             return;
         }
 
@@ -33,15 +34,22 @@ public class Config extends ListenerAdapter {
             return;
         }
 
+        //verify that a role is mentioned
+        if (event.getMessage().getMentionedRoles().isEmpty()) {
+            Embeds.error(event, "Please properly mention the desired streamer role using `@role_name`");
+            return;
+        }
+
         GuildChannel announcementChannel  = event.getMessage().getMentionedChannels().get(0);
+        Role streamerRole = event.getMessage().getMentionedRoles().get(0);
 
         //If an entry already exists, update it.
         if (GuildConfig.guildIsConfigured(event.getGuild().getId())) {
-            GuildConfig.updateGuild(event.getGuild().getId(), announcementChannel.getId());
-            Embeds.success(event, "Successfully updated " + announcementChannel.getName() + " as the announcement channel!");
+            GuildConfig.updateGuild(event.getGuild().getId(), announcementChannel.getId(), streamerRole.getId());
+            Embeds.success(event, "Successfully updated " + announcementChannel.getName() + " as the announcement channel and " + streamerRole.getAsMention() + " as the streamer role");
             return;
         }
-        GuildConfig.addGuild(event.getGuild().getId(), announcementChannel.getId());
-        Embeds.success(event, "Successfully set " + announcementChannel.getName() + " as the announcement channel!");
+        GuildConfig.addGuild(event.getGuild().getId(), announcementChannel.getId(), streamerRole.getId());
+        Embeds.success(event, "Successfully set " + announcementChannel.getName() + " as the announcement channel and " + streamerRole.getAsMention() + " as the streamer role");
     }
 }
