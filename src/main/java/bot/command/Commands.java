@@ -1,9 +1,6 @@
 package bot.command;
 
-import bot.command.impl.AddStreamer;
-import bot.command.impl.Config;
-import bot.command.impl.Ping;
-import bot.command.impl.RemoveStreamer;
+import bot.command.impl.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -23,6 +20,7 @@ public enum Commands {
     PING("ping", "Returns Pong", new Ping()),
     ADDSTREAMER("addstreamer", "Adds a new streamer", new AddStreamer()),
     REMOVESTREAMER("removestreamer", "Disables alerts for a user", new RemoveStreamer()),
+    ROLEPROMOTION("rolepromotion", "Updates when users should be promoted to the streamer role", new RolePromotion()),
     CONFIG("config", "Configures a guild", new Config());
 
     public static final Commands[] VALUES = Commands.values();

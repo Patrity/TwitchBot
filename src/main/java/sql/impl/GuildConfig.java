@@ -40,6 +40,18 @@ public class GuildConfig {
         }
     }
 
+    @SneakyThrows
+    public static void updateRolePromotion(String guildId, boolean rolePromotion) {
+        try (Connection con = Bot.db.get()) {
+            con.setAutoCommit(false);
+            PreparedStatement st = con.prepareStatement("UPDATE guilds SET role_promotions = ? WHERE guild_id = ?");
+            st.setBoolean(1, rolePromotion);
+            st.setString(2, guildId);
+            st.execute();
+            con.commit();
+        }
+    }
+
     //Verifies the guild's existence in the guilds table
     public static boolean guildIsConfigured(String guildId) throws SQLException {
         try(Connection con = Bot.db.get()) {
