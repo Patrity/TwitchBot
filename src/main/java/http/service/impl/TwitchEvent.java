@@ -3,12 +3,15 @@ package http.service.impl;
 import bot.Bot;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import http.request.GetStream;
 import io.javalin.http.Context;
+import model.StreamInfo;
 import model.Streamer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import sql.impl.GuildConfig;
+import sql.impl.Logger;
 import sql.impl.StreamerUtils;
 
 import java.awt.*;
@@ -36,7 +39,7 @@ public class TwitchEvent {
         String streamerId = event.getAsJsonPrimitive("broadcaster_user_id").getAsString();
 
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setColor(Color.GREEN);
+        eb.setColor(Color.decode("#6441a5"));
 
 
         List<Streamer> streamers = StreamerUtils.getStreamerByTwitchId(streamerId);
@@ -47,10 +50,14 @@ public class TwitchEvent {
                 String guildId = streamer.getGuildId();
                 String discordId = streamer.getDiscordId();
                 String channelId = GuildConfig.getGuild(guildId).getChannelId();
+                //StreamInfo info = GetStream.byUserId(channelId);
 
                 Bot.SINGLETON.jda.getGuildById(guildId).retrieveMemberById(discordId).queue(member -> {
                     eb.setTitle(member.getEffectiveName() + " is Now Live!");
                     eb.setDescription(member.getAsMention() + " has just gone live! Check out the stream! https://twitch.tv/" + streamer.getTwitchUsername());
+                    //eb.addField("Viewers:", info.getViewers(), true);
+                    //eb.addField("Game:", info.getGameName(), true);
+                    //eb.setImage(info.getThumbnail());
                     eb.setThumbnail(member.getUser().getAvatarUrl());
                     Bot.SINGLETON.jda.getGuildById(guildId).getTextChannelById(channelId).sendMessage(eb.build()).queue();
                         });
@@ -59,5 +66,7 @@ public class TwitchEvent {
             }
 
                 });
+
+        Logger.insert(200, "webhooks/subscription");
     }
 }
