@@ -3,6 +3,7 @@ package http.service.impl;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.javalin.http.Context;
+import sql.impl.Logger;
 
 /*
  * @project TwitchBot
@@ -24,7 +25,7 @@ public class ChallengeConfirmation {
 
         //return the challenge string to verify url ownership
         request.result(challenge);
-        System.out.println(challenge);
+        Logger.insert(200, "webhooks/challenge");
 
     }
 }

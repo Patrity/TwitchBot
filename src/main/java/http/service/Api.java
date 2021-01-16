@@ -24,7 +24,6 @@ public class Api {
                 ChallengeConfirmation.confirm(request);
 
             } catch (Exception ignored) {
-
                 //All other requests routed to method which handles live notifications
                 TwitchEvent.live(request);
 

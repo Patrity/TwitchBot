@@ -8,6 +8,8 @@ package http.request;
 
 import bot.Bot;
 import com.google.gson.*;
+import okhttp3.internal.http.StatusLine;
+import sql.impl.Logger;
 
 import java.io.IOException;
 import java.net.URI;
@@ -27,6 +29,7 @@ public class GetUser {
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            Logger.insert(response.statusCode(), "users");
 
             JsonParser parser = new JsonParser();
             JsonObject element = (JsonObject) parser.parse(response.body());

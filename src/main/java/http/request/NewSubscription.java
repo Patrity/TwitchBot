@@ -6,6 +6,7 @@ import http.service.Api;
 import model.Condition;
 import model.Subscribe;
 import model.Transport;
+import sql.impl.Logger;
 
 import java.io.IOException;
 import java.net.URI;
@@ -38,9 +39,8 @@ public class NewSubscription {
                 .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(sub)))
                 .build();
 
-        System.err.println("Request sent:");
-        System.out.println(gson.toJson(sub));
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        Logger.insert(response.statusCode(), "eventsub/subscriptions");
     }
 }
