@@ -8,13 +8,14 @@ package model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 @AllArgsConstructor
 public class Guild {
 
-    @Setter
     @Getter
     public String guildId, channelId, streamerRoleId;
+
+    @Getter
+    public boolean rolePromotion;
 
 }

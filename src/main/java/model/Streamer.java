@@ -13,7 +13,6 @@ import lombok.Getter;
 public class Streamer {
 
     @Getter
-
     public String discordId, twitchId, twitchUsername, guildId;
 
 }

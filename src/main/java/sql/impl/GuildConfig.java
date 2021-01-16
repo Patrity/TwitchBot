@@ -19,7 +19,7 @@ public class GuildConfig {
     public static void addGuild(String guildId, String channelId, String streamerRoleId) throws SQLException {
         try (Connection con = Bot.db.get()) {
             con.setAutoCommit(false);
-            PreparedStatement st = con.prepareStatement("INSERT INTO guilds (guild_id, channel_id, streamer_role_id) VALUES (?,?,?)");
+            PreparedStatement st = con.prepareStatement("INSERT INTO guilds (guild_id, channel_id, streamer_role_id, role_promotions) VALUES (?,?,?,0)");
             st.setString(1, guildId);
             st.setString(2, channelId);
             st.setString(3, streamerRoleId);
@@ -63,10 +63,11 @@ public class GuildConfig {
             st.setString(1, guildId);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
-                return new Guild(guildId, rs.getString("channel_id"), rs.getString("streamer_role_id"));
+                return new Guild(guildId, rs.getString("channel_id"), rs.getString("streamer_role_id"), rs.getBoolean("role_promotions"));
             }
 
         }
         return null;
     }
+
 }

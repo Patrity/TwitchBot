@@ -1,7 +1,5 @@
 package bot.listeners;
 
-import bot.Bot;
-import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
@@ -20,7 +18,7 @@ public class UserActivity extends ListenerAdapter {
     public void onUserActivityStart(UserActivityStartEvent event) {
 
         if (event.getNewActivity().getType().name().equalsIgnoreCase("STREAMING")) {
-            if (StreamerUtils.isStreamer(event.getUser().getId(), event.getGuild().getId())) {
+            if (StreamerUtils.isStreamer(event.getUser().getId(), event.getGuild().getId()) || GuildConfig.getGuild(event.getGuild().getId()).isRolePromotion()) {
                 try {
                     Role streamerRole = event.getGuild().getRoleById(GuildConfig.getGuild(event.getGuild().getId()).getStreamerRoleId());
                     event.getGuild().addRoleToMember(event.getUser().getId(), streamerRole).queue();
@@ -36,7 +34,7 @@ public class UserActivity extends ListenerAdapter {
     public void onUserActivityEnd(UserActivityEndEvent event) {
 
         if (event.getOldActivity().getType().name().equalsIgnoreCase("STREAMING")) {
-            if (StreamerUtils.isStreamer(event.getUser().getId(), event.getGuild().getId())) {
+            if (StreamerUtils.isStreamer(event.getUser().getId(), event.getGuild().getId()) || GuildConfig.getGuild(event.getGuild().getId()).isRolePromotion()) {
                 try {
                     Role streamerRole = event.getGuild().getRoleById(GuildConfig.getGuild(event.getGuild().getId()).getStreamerRoleId());
                     event.getGuild().removeRoleFromMember(event.getUser().getId(), streamerRole).queue();
